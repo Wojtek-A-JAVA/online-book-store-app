@@ -34,8 +34,8 @@ public class AppConfig {
         localSessionFactoryBean.setDataSource(getDataSource());
 
         Properties properties = new Properties();
-        properties.put(environment.getProperty("hibernate.hbm2ddl.auto"), "create-drop");
-        properties.put(environment.getProperty("hibernate.show_sql"), "true");
+        properties.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
         localSessionFactoryBean.setHibernateProperties(properties);
 
         localSessionFactoryBean.setPackagesToScan("book.store.model");
