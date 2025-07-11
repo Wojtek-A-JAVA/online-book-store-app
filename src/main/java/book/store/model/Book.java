@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.Data;
-import org.jspecify.annotations.NonNull;
 
 @Entity
 @Table(name = "books")
@@ -17,14 +16,13 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NonNull
+    @Column(nullable = false)
     private String title;
-    @NonNull
+    @Column(nullable = false)
     private String author;
-    @NonNull
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String isbn;
-    @NonNull
+    @Column(nullable = false)
     private BigDecimal price;
     private String description;
     private String coverImage;
