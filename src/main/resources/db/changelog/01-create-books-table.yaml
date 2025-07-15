@@ -46,6 +46,6 @@ databaseChangeLog:
                     nullable: true
               - column:
                   name: is_deleted
-                  type: bit
+                  type: BIT(1)
                   constraints:
                     nullable: false
