@@ -16,7 +16,6 @@ public class BookSpecificationBuilderImpl implements SpecificationBuilder<Book> 
 
     @Override
     public Specification<Book> build(BookSearchParametersDto searchParameters) {
-//        Specification<Book> specification = Specification.where(null);
         Specification<Book> specification = ((root, query, criteriaBuilder) ->
                 criteriaBuilder.conjunction());
         if (searchParameters.author() != null && searchParameters.author().length > 0) {
