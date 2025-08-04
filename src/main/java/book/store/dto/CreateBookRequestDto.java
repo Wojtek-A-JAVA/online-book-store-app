@@ -1,5 +1,6 @@
 package book.store.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,11 +9,13 @@ import lombok.Data;
 
 @Data
 public class CreateBookRequestDto {
+    @Schema(hidden = true)
     private Long id;
     @NotNull(message = "Title cannot be null")
     private String title;
     @NotNull(message = "Author cannot be null")
     private String author;
+    @Schema(type = "string", description = "String must be unique with 13-digit number")
     @NotNull(message = "ISBN cannot be null, must be unique 13-digit number")
     @Size(min = 13, max = 13)
     private String isbn;
