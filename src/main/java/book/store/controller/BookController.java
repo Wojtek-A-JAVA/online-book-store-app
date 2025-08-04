@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,7 +57,7 @@ public class BookController {
     @Operation(summary = "Get all books", description = "Get a list of undeleted books "
             + "with the possibility of sorting and pagination")
     @PageableAsQueryParam
-    public List<BookDto> getAll(@Parameter(hidden = true) Pageable pageable) {
+    public Page<BookDto> getAll(@Parameter(hidden = true) Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
@@ -71,8 +71,9 @@ public class BookController {
     @Tag(name = "Search")
     @GetMapping("/search")
     @Operation(summary = "Search for books", description = "Search for books by given data")
-    public List<BookDto> search(BookSearchParametersDto parameters) {
-        return bookService.search(parameters);
+    public Page<BookDto> search(BookSearchParametersDto parameters,
+                                @Parameter(hidden = true) Pageable pageable) {
+        return bookService.search(parameters, pageable);
     }
 
     @Tag(name = "Delete")
