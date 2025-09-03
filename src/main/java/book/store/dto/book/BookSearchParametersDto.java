@@ -1,4 +1,4 @@
-package book.store.dto;
+package book.store.dto.book;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
