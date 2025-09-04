@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FieldMatchValidator.class)
+@Constraint(validatedBy = PasswordsMatchValidator.class)
 @Documented
-public @interface FieldMatch {
+public @interface PasswordsMatch {
     String message() default "Repeated password is not identical as password.";
 
     Class<?>[] groups() default {};
