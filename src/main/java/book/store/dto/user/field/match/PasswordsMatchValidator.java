@@ -4,7 +4,7 @@ import book.store.dto.user.UserRegistrationRequestDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch,
+public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMatch,
         UserRegistrationRequestDto> {
 
     @Override
