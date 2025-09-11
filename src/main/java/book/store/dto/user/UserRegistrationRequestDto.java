@@ -1,12 +1,12 @@
 package book.store.dto.user;
 
-import book.store.dto.user.field.match.PasswordsMatch;
+import book.store.dto.user.field.match.FieldMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-@PasswordsMatch
+@FieldMatch(first = "password", second = "repeatPassword", message = "Passwords must match")
 @Getter
 public class UserRegistrationRequestDto {
     @NotBlank(message = "Cannot be blank")
