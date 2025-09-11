@@ -1,7 +1,7 @@
 package book.store.mapper;
 
-import book.store.dto.BookDto;
-import book.store.dto.CreateBookRequestDto;
+import book.store.dto.book.BookDto;
+import book.store.dto.book.CreateBookRequestDto;
 import book.store.model.Book;
 
 public interface BookMapper {
