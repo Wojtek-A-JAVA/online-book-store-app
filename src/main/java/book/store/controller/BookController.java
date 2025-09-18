@@ -42,7 +42,7 @@ public class BookController {
     @Tag(name = "Create")
     @PostMapping
     @Operation(summary = "Create new book", description = "Create new book")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
@@ -50,7 +50,7 @@ public class BookController {
     @Tag(name = "Update")
     @PutMapping("/{id}")
     @Operation(summary = "Update book data", description = "Update book data by id")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BookDto updateBook(@PathVariable Long id, @RequestBody CreateBookRequestDto bookDto) {
         return bookService.updateBook(id, bookDto);
     }
@@ -60,7 +60,7 @@ public class BookController {
     @Operation(summary = "Get all books", description = "Get a list of undeleted books "
             + "with the possibility of sorting and pagination")
     @PageableAsQueryParam
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER''ADMIN)")
     public Page<BookDto> getAll(@Parameter(hidden = true) Pageable pageable) {
         return bookService.findAll(pageable);
     }
@@ -68,7 +68,7 @@ public class BookController {
     @Tag(name = "Find")
     @GetMapping("/{id}")
     @Operation(summary = "Get one book", description = "Get a book by id")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER''ADMIN)")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
@@ -76,7 +76,7 @@ public class BookController {
     @Tag(name = "Search")
     @GetMapping("/search")
     @Operation(summary = "Search for books", description = "Search for books by given data")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER''ADMIN)")
     public Page<BookDto> search(BookSearchParametersDto parameters,
                                 @Parameter(hidden = true) Pageable pageable) {
         return bookService.search(parameters, pageable);
@@ -86,7 +86,7 @@ public class BookController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete one book", description = "Delete a book by id")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteById(id);
     }
@@ -95,7 +95,7 @@ public class BookController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete all books", description = "Delete all books")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAll() {
         bookService.deleteAll();
     }
