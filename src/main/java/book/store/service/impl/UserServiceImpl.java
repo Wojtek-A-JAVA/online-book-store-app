@@ -1,6 +1,5 @@
 package book.store.service.impl;
 
-import book.store.component.RoleComponent;
 import book.store.dto.user.UserRegistrationRequestDto;
 import book.store.dto.user.UserResponseDto;
 import book.store.exception.RegistrationException;
@@ -19,7 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final RoleComponent roleComponent;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
@@ -30,8 +28,6 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        roleComponent.addRole(user);
-
         User savedUser = userRepository.save(user);
         return userMapper.toUserResponseDto(savedUser);
     }
