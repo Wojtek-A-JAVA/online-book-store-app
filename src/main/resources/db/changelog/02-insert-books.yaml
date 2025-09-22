@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: wojtek-a
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Book 1"}
+              - column: { name: author, value: "Author 1"}
+              - column: { name: isbn, value: "1234567890123"}
+              - column: { name: price, value: "10.10"}
+              - column: { name: description, value: "Book 1 description"}
+              - column: { name: cover_image, value: "http://www.book.com/cover_1"}
+              - column: { name: is_deleted, value: ""}
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Book 2"}
+              - column: { name: author, value: "Author 2"}
+              - column: { name: isbn, value: "1234567890124"}
+              - column: { name: price, value: "20.20"}
+              - column: { name: description, value: "Book 2 description"}
+              - column: { name: cover_image, value: "http://www.book.com/cover_2"}
+              - column: { name: is_deleted, value: ""}
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Book 3"}
+              - column: { name: author, value: "Author 3"}
+              - column: { name: isbn, value: "1234567890125"}
+              - column: { name: price, value: "30.30"}
+              - column: { name: description, value: "Book 3 description"}
+              - column: { name: cover_image, value: "http://www.book.com/cover_3"}
+              - column: { name: is_deleted, value: ""}
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Book 4"}
+              - column: { name: author, value: "Author 1"}
+              - column: { name: isbn, value: "1234567890126"}
+              - column: { name: price, value: "40.40"}
+              - column: { name: description, value: "Book 4 description"}
+              - column: { name: cover_image, value: "http://www.book.com/cover_4"}
+              - column: { name: is_deleted, value: ""}
