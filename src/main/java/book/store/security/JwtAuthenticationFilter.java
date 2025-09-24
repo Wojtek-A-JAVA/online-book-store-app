@@ -21,6 +21,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final String requestHeader = "Authorization";
+    private final String tokenStart = "Bearer ";
+    private final int tokenBeginIndex = 7;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -40,9 +43,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getToken(HttpServletRequest request) {
-        String token = request.getHeader("Autorization");
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            return token.substring(7);
+        String token = request.getHeader(requestHeader);
+        if (StringUtils.hasText(token) && token.startsWith(tokenStart)) {
+            return token.substring(tokenBeginIndex);
         }
         return null;
     }

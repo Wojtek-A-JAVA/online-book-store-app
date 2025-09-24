@@ -8,18 +8,19 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@Data
 public class JwtUtil {
-
-    @Value("${jwt.expiration}")
     private long expiration;
-
     private Key secret;
 
-    public JwtUtil(@Value("${jwt.secret}") String key) {
+    public JwtUtil(
+            @Value("${jwt.expiration}") long expiration, @Value("${jwt.secret}") String key) {
+        this.expiration = expiration;
         secret = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
