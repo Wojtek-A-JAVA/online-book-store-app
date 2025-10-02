@@ -1,7 +1,7 @@
 package book.store.repository.book.specifications;
 
 import book.store.model.Book;
-import book.store.repository.SpecificationProvider;
+import book.store.repository.specification.SpecificationProvider;
 import java.util.Arrays;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;

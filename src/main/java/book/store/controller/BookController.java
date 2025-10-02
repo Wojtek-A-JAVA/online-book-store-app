@@ -57,10 +57,10 @@ public class BookController {
 
     @Tag(name = "Find")
     @GetMapping
-    @Operation(summary = "Get all books", description = "Get a list of undeleted books "
+    @Operation(summary = "Get all books", description = "Get a list of undeleted books"
             + "with the possibility of sorting and pagination")
     @PageableAsQueryParam
-    @PreAuthorize("hasAnyRole('USER''ADMIN)")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public Page<BookDto> getAll(@Parameter(hidden = true) Pageable pageable) {
         return bookService.findAll(pageable);
     }
@@ -68,7 +68,7 @@ public class BookController {
     @Tag(name = "Find")
     @GetMapping("/{id}")
     @Operation(summary = "Get one book", description = "Get a book by id")
-    @PreAuthorize("hasAnyRole('USER''ADMIN)")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
@@ -76,7 +76,7 @@ public class BookController {
     @Tag(name = "Search")
     @GetMapping("/search")
     @Operation(summary = "Search for books", description = "Search for books by given data")
-    @PreAuthorize("hasAnyRole('USER''ADMIN)")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public Page<BookDto> search(BookSearchParametersDto parameters,
                                 @Parameter(hidden = true) Pageable pageable) {
         return bookService.search(parameters, pageable);
