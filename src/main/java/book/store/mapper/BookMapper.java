@@ -11,8 +11,4 @@ public interface BookMapper {
     BookDto toBookDto(Book book);
 
     Book toEntity(CreateBookRequestDto bookDto);
-
-//    @AfterMapping
-//    default void setCategoryIds(@MappingTarget BookDto bookDto, Book book) {
-//    }
 }
