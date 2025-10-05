@@ -2,6 +2,7 @@ package book.store.controller;
 
 import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.category.CategoryDto;
+import book.store.dto.category.CreateCategorykRequestDto;
 import book.store.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,15 +31,15 @@ public class CategoryController {
     @Tag(name = "Create")
     @PostMapping
     @Operation(summary = "Create new category", description = "Create new category")
-    @PreAuthorize("hasRole('ADMIN")
-    public CategoryDto createCategory(@RequestBody @Valid CategoryDto categoryDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryDto createCategory(@RequestBody @Valid CreateCategorykRequestDto categoryDto) {
         return categoryService.save(categoryDto);
     }
 
     @Tag(name = "Find")
     @GetMapping
     @Operation(summary = "Find all categories", description = "Get a list of undeleted categories")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ROLE_ADMIN')")
     public List<CategoryDto> getAll() {
         return categoryService.findAll();
     }
@@ -54,9 +55,9 @@ public class CategoryController {
     @Tag(name = "Update")
     @PutMapping("/{id}")
     @Operation(summary = "Update category", description = "Update category with given id")
-    @PreAuthorize("hasRole('ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDto updateCategory(@PathVariable Long id,
-                                      @RequestBody CategoryDto categoryDto) {
+                                      @RequestBody CreateCategorykRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
@@ -64,7 +65,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete one category", description = "Delete a category with id")
-    @PreAuthorize("hasRole('ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
@@ -74,6 +75,6 @@ public class CategoryController {
     @Operation(summary = "Find by category", description = "Find books by category")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(@PathVariable Long id) {
-        return null;
+        return categoryService.getBooksByCategoryId(id);
     }
 }
