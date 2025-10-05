@@ -39,7 +39,7 @@ public class CategoryController {
     @Tag(name = "Find")
     @GetMapping
     @Operation(summary = "Find all categories", description = "Get a list of undeleted categories")
-    @PreAuthorize("hasAnyRole('USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<CategoryDto> getAll() {
         return categoryService.findAll();
     }
