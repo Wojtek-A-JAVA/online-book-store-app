@@ -1,7 +1,5 @@
 package book.store.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import book.store.security.CustomUserDetailsService;
 import book.store.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +47,6 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                .httpBasic(withDefaults())
                 .sessionManagement(sesion ->
                         sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter,

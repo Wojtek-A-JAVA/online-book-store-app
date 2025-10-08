@@ -16,6 +16,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -55,7 +56,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRoleName().name()))
+                .toList();
     }
 
     @Override

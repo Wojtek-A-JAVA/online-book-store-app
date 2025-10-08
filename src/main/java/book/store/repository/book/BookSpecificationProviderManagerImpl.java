@@ -1,8 +1,8 @@
 package book.store.repository.book;
 
 import book.store.model.Book;
-import book.store.repository.SpecificationProvider;
-import book.store.repository.SpecificationProviderManager;
+import book.store.repository.specification.SpecificationProvider;
+import book.store.repository.specification.SpecificationProviderManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
