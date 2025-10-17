@@ -2,7 +2,7 @@ package book.store.service.impl;
 
 import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.category.CategoryDto;
-import book.store.dto.category.CreateCategorykRequestDto;
+import book.store.dto.category.CreateCategoryRequestDto;
 import book.store.exception.EntityNotFoundException;
 import book.store.mapper.BookMapper;
 import book.store.mapper.CategoryMapper;
@@ -12,8 +12,13 @@ import book.store.repository.category.CategoryRepository;
 import book.store.service.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -24,13 +29,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final BookMapper bookMapper;
 
     @Override
-    public List<CategoryDto> findAll() {
-        return categoryRepository.findAll().stream()
+    @Transactional
+    public Page<CategoryDto> findAll(Pageable pageable) {
+        List<CategoryDto> categoryDtoList = categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
                 .toList();
+        return new PageImpl<>(categoryDtoList, pageable, categoryDtoList.size());
     }
 
     @Override
+    @Transactional
     public CategoryDto getById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Category with id " + id + " not found"));
@@ -38,14 +46,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto save(CreateCategorykRequestDto categoryDto) {
+    @Transactional
+    public CategoryDto save(CreateCategoryRequestDto categoryDto) {
         Category category = categoryMapper.toEntity(categoryDto);
         Category savedCategory = categoryRepository.save(category);
         return categoryMapper.toDto(savedCategory);
     }
 
     @Override
-    public CategoryDto update(Long id, CreateCategorykRequestDto categoryDto) {
+    @Transactional
+    public CategoryDto update(Long id, CreateCategoryRequestDto categoryDto) {
         Category savedCategory = categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Category with id " + id + " not found"));
         Category updatedCategory = categoryMapper.toEntity(categoryDto);
@@ -54,11 +64,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long id) {
         return bookRepository.findAllByCategoryId(id).stream()
                 .map(bookMapper::toDtoWithoutCategories)
