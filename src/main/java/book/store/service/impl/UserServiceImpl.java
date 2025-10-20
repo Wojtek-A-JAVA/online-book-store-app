@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationException("This email already registered");
         }
 
-        User user = userMapper.toUser(requestDto);
+        User user = userMapper.toEntity(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User savedUser = userRepository.save(user);
-        return userMapper.toUserResponseDto(savedUser);
+        return userMapper.toDto(savedUser);
     }
 }

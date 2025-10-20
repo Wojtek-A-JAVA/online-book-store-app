@@ -39,7 +39,6 @@ public class Book {
     private String coverImage;
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
-
     @ManyToMany
     @JoinTable(
             name = "books_categories",
