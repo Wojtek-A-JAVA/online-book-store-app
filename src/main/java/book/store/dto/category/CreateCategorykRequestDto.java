@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class CreateCategoryRequestDto {
+public class CreateCategorykRequestDto {
     @Schema(hidden = true)
     private Long id;
     @NotNull(message = "Name cannot be null")
