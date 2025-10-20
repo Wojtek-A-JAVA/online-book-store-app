@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
     public BookDto save(CreateBookRequestDto bookDto) {
         Book book = bookMapper.toEntity(bookDto);
         Book savedBook = bookRepository.save(book);
-        return bookMapper.toDto(savedBook);
+        return bookMapper.toBookDto(savedBook);
     }
 
     @Override
@@ -39,14 +39,14 @@ public class BookServiceImpl implements BookService {
     public BookDto findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book with id " + id + " not found"));
-        return bookMapper.toDto(book);
+        return bookMapper.toBookDto(book);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<BookDto> findAll(Pageable pageable) {
         List<BookDto> bookDtoList = bookRepository.findAll(pageable).stream()
-                .map(bookMapper::toDto)
+                .map(bookMapper::toBookDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(bookDtoList, pageable, bookDtoList.size());
     }
@@ -57,7 +57,7 @@ public class BookServiceImpl implements BookService {
                 () -> new EntityNotFoundException("Book with id " + id + " not found"));
         Book bookUpdated = bookMapper.toEntity(bookDto);
         bookUpdated.setId(bookSaved.getId());
-        return bookMapper.toDto(bookRepository.save(bookUpdated));
+        return bookMapper.toBookDto(bookRepository.save(bookUpdated));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class BookServiceImpl implements BookService {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(parameters);
         List<BookDto> bookDtoList = bookRepository.findAll(bookSpecification)
                 .stream()
-                .map(bookMapper::toDto)
+                .map(bookMapper::toBookDto)
                 .toList();
         return new PageImpl<>(bookDtoList, pageable, bookDtoList.size());
     }
