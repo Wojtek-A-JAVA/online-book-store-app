@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -29,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final BookMapper bookMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<CategoryDto> findAll(Pageable pageable) {
         List<CategoryDto> categoryDtoList = categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
@@ -38,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CategoryDto getById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Category with id " + id + " not found"));
@@ -70,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long id) {
         return bookRepository.findAllByCategoryId(id).stream()
                 .map(bookMapper::toDtoWithoutCategories)
