@@ -20,6 +20,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/10-insert-categories.yaml
   - include:
-      file: db/changelog/11-create-books_categories-table.yaml
+      file: db/changelog/11-create-books-categories-table.yaml
   - include:
-      file: db/changelog/12-insert-books_categories.yaml
+      file: db/changelog/12-insert-books-categories.yaml
+  - include:
+      file: db/changelog/13-create-shopping-carts-table.yaml
+  - include:
+      file: db/changelog/15-create-cart-item-table.yaml
