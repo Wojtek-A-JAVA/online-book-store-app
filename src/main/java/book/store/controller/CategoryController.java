@@ -2,13 +2,16 @@ package book.store.controller;
 
 import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.category.CategoryDto;
-import book.store.dto.category.CreateCategorykRequestDto;
+import book.store.dto.category.CreateCategoryRequestDto;
 import book.store.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +35,7 @@ public class CategoryController {
     @PostMapping
     @Operation(summary = "Create new category", description = "Create new category")
     @PreAuthorize("hasRole('ADMIN')")
-    public CategoryDto createCategory(@RequestBody @Valid CreateCategorykRequestDto categoryDto) {
+    public CategoryDto createCategory(@RequestBody @Valid CreateCategoryRequestDto categoryDto) {
         return categoryService.save(categoryDto);
     }
 
@@ -40,8 +43,8 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Find all categories", description = "Get a list of undeleted categories")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<CategoryDto> getAll() {
-        return categoryService.findAll();
+    public Page<CategoryDto> getAll(@Parameter(hidden = true) Pageable pageable) {
+        return categoryService.findAll(pageable);
     }
 
     @Tag(name = "Find")
@@ -57,7 +60,7 @@ public class CategoryController {
     @Operation(summary = "Update category", description = "Update category with given id")
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryDto updateCategory(@PathVariable Long id,
-                                      @RequestBody CreateCategorykRequestDto categoryDto) {
+                                      @RequestBody CreateCategoryRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
