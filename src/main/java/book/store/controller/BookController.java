@@ -4,7 +4,6 @@ import book.store.dto.book.BookDto;
 import book.store.dto.book.BookSearchParametersDto;
 import book.store.dto.book.CreateBookRequestDto;
 import book.store.service.BookService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,13 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@OpenAPIDefinition(tags = {
-        @Tag(name = "Create"),
-        @Tag(name = "Update"),
-        @Tag(name = "Find"),
-        @Tag(name = "Search"),
-        @Tag(name = "Delete"),
-})
+@Tag(name = "Book", description = "Books related endpoints")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/books")
@@ -39,7 +32,6 @@ public class BookController {
 
     private final BookService bookService;
 
-    @Tag(name = "Create")
     @PostMapping
     @Operation(summary = "Create new book", description = "Create new book")
     @PreAuthorize("hasRole('ADMIN')")
@@ -47,7 +39,6 @@ public class BookController {
         return bookService.save(bookDto);
     }
 
-    @Tag(name = "Update")
     @PutMapping("/{id}")
     @Operation(summary = "Update book data", description = "Update book data by id")
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,7 +46,6 @@ public class BookController {
         return bookService.updateBook(id, bookDto);
     }
 
-    @Tag(name = "Find")
     @GetMapping
     @Operation(summary = "Get all books", description = "Get a list of undeleted books"
             + "with the possibility of sorting and pagination")
@@ -65,7 +55,6 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
-    @Tag(name = "Find")
     @GetMapping("/{id}")
     @Operation(summary = "Get one book", description = "Get a book by id")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -73,7 +62,6 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    @Tag(name = "Search")
     @GetMapping("/search")
     @Operation(summary = "Search for books", description = "Search for books by given data")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -82,7 +70,6 @@ public class BookController {
         return bookService.search(parameters, pageable);
     }
 
-    @Tag(name = "Delete")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete one book", description = "Delete a book by id")
@@ -91,7 +78,6 @@ public class BookController {
         bookService.deleteById(id);
     }
 
-    @Tag(name = "Delete")
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete all books", description = "Delete all books")

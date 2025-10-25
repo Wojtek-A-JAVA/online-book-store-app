@@ -12,9 +12,9 @@ databaseChangeLog:
   - include:
       file: db/changelog/06-insert-roles.yaml
   - include:
-      file: db/changelog/07-create-users_roles-table.yaml
+      file: db/changelog/07-create-users-roles-table.yaml
   - include:
-      file: db/changelog/08-insert-users_roles.yaml
+      file: db/changelog/08-insert-users-roles.yaml
   - include:
       file: db/changelog/09-create-categories-table.yaml
   - include:
@@ -26,4 +26,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/13-create-shopping-carts-table.yaml
   - include:
-      file: db/changelog/15-create-cart-item-table.yaml
+      file: db/changelog/14-create-cart-item-table.yaml
+  - include:
+      file: db/changelog/15-create-orders-table.yaml
+  - include:
+      file: db/changelog/16-create-order-items-table.yaml
