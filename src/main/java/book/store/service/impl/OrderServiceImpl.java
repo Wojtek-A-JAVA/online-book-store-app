@@ -91,15 +91,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void updateOrderStatus(Long id, UpdateOrderRequestDto updateOrderDto) {
-        Order order = findOrderById(id);
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Order with id " + id + " wasn't found"));
         order.setStatus(updateOrderDto.getStatus());
         orderRepository.save(order);
     }
 
     @Override
     @Transactional
-    public List<OrderItemDto> getAllOrderItemsFromOrder(Long id) {
-        Order order = findOrderById(id);
+    public List<OrderItemDto> getAllOrderItemsFromOrder(Long orderId, User user) {
+        Order order = findUserOrder(orderId, user);
+
         return order.getOrderItems().stream()
                 .map(orderItemMapper::toDto)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -107,8 +109,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderItemDto getOrderItemFromOrder(Long orderId, Long itemId) {
-        Order order = findOrderById(orderId);
+    public OrderItemDto getOrderItemFromOrder(Long orderId, Long itemId, User user) {
+        Order order = findUserOrder(orderId, user);
 
         for (OrderItem orderItem : order.getOrderItems()) {
             if (orderItem.getId() == itemId) {
@@ -120,10 +122,9 @@ public class OrderServiceImpl implements OrderService {
                 + " was not found in order with id " + orderId);
     }
 
-    private Order findOrderById(Long id) {
-        return orderRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Order with id " + id
-                        + " was not found")
-        );
+    private Order findUserOrder(Long orderId, User user) {
+        return orderRepository.findByIdAndUserId(orderId, user.getId()).orElseThrow(
+                () -> new EntityNotFoundException("User with id " + user.getId()
+                        + " doesn't have order with id " + orderId));
     }
 }

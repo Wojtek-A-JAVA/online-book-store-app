@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,8 +34,8 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "Create Order", description = "The user can place an order")
     @PreAuthorize("hasRole('USER')")
-    public OrderDto placeOrder(@RequestBody @Valid CreateOrderRequestDto createOrderRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public OrderDto placeOrder(@RequestBody @Valid CreateOrderRequestDto createOrderRequestDto,
+                               Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return orderService.placeOrder(createOrderRequestDto, user);
     }
@@ -44,8 +43,7 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "Get all orders", description = "The user can get all orders")
     @PreAuthorize("hasRole('USER')")
-    public List<OrderDto> getAllOrders() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public List<OrderDto> getAllOrders(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return orderService.getAllOrders(user);
     }
@@ -63,16 +61,20 @@ public class OrderController {
     @Operation(summary = "Get all order items", description = "The user can get all order items "
             + "from specific order")
     @PreAuthorize("hasRole('USER')")
-    public List<OrderItemDto> getAllOrderItems(@PathVariable Long id) {
-        return orderService.getAllOrderItemsFromOrder(id);
+    public List<OrderItemDto> getAllOrderItems(@PathVariable Long id,
+                                               Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return orderService.getAllOrderItemsFromOrder(id, user);
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
     @Operation(summary = "Get order item from order", description = "The user can get order item "
             + "from specific order")
     @PreAuthorize("hasRole('USER')")
-    public OrderItemDto getOrderItemFromOrder(@PathVariable("orderId") Long orderId,
-                                              @PathVariable("itemId") Long itemId) {
-        return orderService.getOrderItemFromOrder(orderId, itemId);
+    public OrderItemDto getOrderItemFromOrder(@PathVariable Long orderId,
+                                              @PathVariable Long itemId,
+                                              Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return orderService.getOrderItemFromOrder(orderId, itemId, user);
     }
 }
