@@ -1,12 +1,14 @@
 
 services:
   mysqldb:
-    image: mysql:latest
-    container_name: book_store_container
+    image: mysql:8.0.39
+    container_name: mysql
     restart: unless-stopped
     env_file: .env
     ports:
       - ${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
+    volumes:
+      - ./db:/var/lib/mysql
     environment:
       MYSQL_USER: ${MYSQLDB_USER}
       MYSQL_PASSWORD: ${MYSQLDB_PASSWORD}
@@ -31,8 +33,8 @@ services:
       - ${DEBUG_PORT}:${DEBUG_PORT}
     environment:
       SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url":"jdbc:mysql://mysqldb:3306/${MYSQLDB_DATABASE}?createDatabaseIfNotExist=true",
+        "spring.datasource.url":"jdbc:mysql://mysqldb:3306/${MYSQLDB_DATABASE}?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true",
         "spring.datasource.username":"${MYSQLDB_USER}",
         "spring.datasource.password":"${MYSQLDB_PASSWORD}"
       }'
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_PORT}"
