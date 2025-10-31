@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Category", description = "Categories related endpoints")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/categories")
@@ -31,7 +32,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Tag(name = "Create")
     @PostMapping
     @Operation(summary = "Create new category", description = "Create new category")
     @PreAuthorize("hasRole('ADMIN')")
@@ -39,7 +39,6 @@ public class CategoryController {
         return categoryService.save(categoryDto);
     }
 
-    @Tag(name = "Find")
     @GetMapping
     @Operation(summary = "Find all categories", description = "Get a list of undeleted categories")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -47,7 +46,6 @@ public class CategoryController {
         return categoryService.findAll(pageable);
     }
 
-    @Tag(name = "Find")
     @GetMapping("/{id}")
     @Operation(summary = "Find one category", description = "Find category by id")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -55,7 +53,6 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-    @Tag(name = "Update")
     @PutMapping("/{id}")
     @Operation(summary = "Update category", description = "Update category with given id")
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,7 +61,6 @@ public class CategoryController {
         return categoryService.update(id, categoryDto);
     }
 
-    @Tag(name = "Delete")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete one category", description = "Delete a category with id")
@@ -73,7 +69,6 @@ public class CategoryController {
         categoryService.deleteById(id);
     }
 
-    @Tag(name = "Find")
     @GetMapping("/{id}/books")
     @Operation(summary = "Find by category", description = "Find books by category")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")

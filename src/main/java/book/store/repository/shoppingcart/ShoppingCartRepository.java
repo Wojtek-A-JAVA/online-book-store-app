@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
 
     Optional<ShoppingCart> findByUserId(Long userId);
+
+    void delete(ShoppingCart shoppingCart);
 }
