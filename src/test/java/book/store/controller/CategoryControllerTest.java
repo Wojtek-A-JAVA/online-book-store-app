@@ -9,42 +9,33 @@ import book.store.dto.category.CategoryDto;
 import book.store.dto.category.CreateCategoryRequestDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class CategoryControllerTest {
 
-    private static MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext) {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(applicationContext)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     @Sql(scripts = "classpath:database/categories/delete-added-category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void creatCategory_ValidRequestDto_Success() throws Exception {
+    void createCategory_ValidRequestDto_Success() throws Exception {
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto()
                 .setName("Category Test")
                 .setDescription("Description Test");
@@ -76,7 +67,7 @@ public class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    void creatCategory_ValidRequestDto_ReturnStatusForbidden() throws Exception {
+    void createCategory_ValidRequestDto_ReturnStatusForbidden() throws Exception {
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto()
                 .setName("Category Test")
                 .setDescription("Description Test");

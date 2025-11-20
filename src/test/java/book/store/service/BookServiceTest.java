@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import book.store.dto.book.BookDto;
 import book.store.dto.book.BookSearchParametersDto;
 import book.store.dto.book.CreateBookRequestDto;
+import book.store.exception.EntityNotFoundException;
 import book.store.mapper.BookMapper;
 import book.store.model.Book;
 import book.store.repository.book.BookRepository;
@@ -44,13 +45,13 @@ public class BookServiceTest {
     private BookSpecificationBuilderImpl bookSpecificationBuilder;
 
     @Test
-    void creatBook_ValidRequestDto_Success() {
+    void createBook_ValidRequestDto_Success() {
         CreateBookRequestDto requestDto = new CreateBookRequestDto()
                 .setTitle("Book 1")
                 .setAuthor("Author")
                 .setIsbn("1234567890123")
                 .setPrice(new BigDecimal("10.10"));
-        Book book = createBook(1L, requestDto.getTitle(), requestDto.getAuthor(), requestDto.getIsbn(), requestDto.getIsbn());
+        Book book = createBook(1L, requestDto.getTitle(), requestDto.getAuthor(), requestDto.getIsbn(), String.valueOf(requestDto.getPrice()));
         BookDto bookDto = createBookDtoFromBook(book);
 
         when(bookMapper.toEntity(requestDto)).thenReturn(book);
@@ -88,7 +89,7 @@ public class BookServiceTest {
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class,
+        Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> bookService.findById(bookId));
 
         assertEquals("Book with id " + bookId + " not found", exception.getMessage());
@@ -154,7 +155,7 @@ public class BookServiceTest {
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class,
+        Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> bookService.findById(bookId));
 
         assertEquals("Book with id " + bookId + " not found", exception.getMessage());

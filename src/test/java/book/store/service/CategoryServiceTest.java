@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.category.CategoryDto;
 import book.store.dto.category.CreateCategoryRequestDto;
+import book.store.exception.EntityNotFoundException;
 import book.store.mapper.BookMapper;
 import book.store.mapper.CategoryMapper;
 import book.store.model.Book;
@@ -91,14 +92,14 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class,
+        Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> categoryService.getById(categoryId));
 
         assertEquals("Category with id " + categoryId + " not found", exception.getMessage());
     }
 
     @Test
-    void creatCategory_ValidRequestDto_Success() {
+    void createCategory_ValidRequestDto_Success() {
         CreateCategoryRequestDto categoryRequestDto = new CreateCategoryRequestDto()
                 .setName("Name 1")
                 .setDescription("Description 1");
@@ -142,7 +143,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class,
+        Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> categoryService.getById(categoryId));
 
         assertEquals("Category with id " + categoryId + " not found", exception.getMessage());
