@@ -75,7 +75,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         cartItem.setQuantity(cartItem.getQuantity()
                 + shoppingCartRequestDto.getQuantity());
-        return cartItemMapper.toDto(cartItemRepository.save(cartItem));
+        cartItemRepository.save(cartItem);
+        return cartItemMapper.toDto(cartItem);
     }
 
     @Override
