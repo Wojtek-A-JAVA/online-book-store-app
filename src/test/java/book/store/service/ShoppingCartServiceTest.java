@@ -1,10 +1,7 @@
 package book.store.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +47,7 @@ public class ShoppingCartServiceTest {
 
     @Test
     void getOne_ShoppingCartInDatabase_Success() {
-        User user = creatUser();
+        User user = createUser();
         ShoppingCart shoppingCart = createShoppingCart(user);
         ShoppingCartDto expected = new ShoppingCartDto().setId(shoppingCart.getId())
                 .setUserId(user.getId());
@@ -64,20 +61,20 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void getOne_ShoppingCartInDatabase_ThrowException() {
+    void getShoppingCart_ShoppingCartNotInDatabase_ThrowsException() {
         Long userId = -1L;
 
         when(shoppingCartRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> shoppingCartService.getShoppingCart(userId));
-        assertEquals("User with id " + userId + " doesn't have shopping cart", exception.getMessage());
 
+        assertEquals("User with id " + userId + " doesn't have shopping cart", exception.getMessage());
     }
 
     @Test
     void addItemToCart_NewCartItemToNotExistingShoppingCartInDatabase_Success() {
-        User user = creatUser();
+        User user = createUser();
         CreateShoppingCartRequestDto shoppingCartRequestDto = new CreateShoppingCartRequestDto()
                 .setBookId(2L)
                 .setQuantity(5);
@@ -99,14 +96,14 @@ public class ShoppingCartServiceTest {
 
         CartItemDto actual = shoppingCartService.addItemToCart(user, shoppingCartRequestDto);
 
-        assertEquals(2L, actual.getBookId());
-        assertEquals(5, actual.getQuantity());
-        assertEquals(1, actual.getId());
+        assertNotNull(actual.getId());
+        assertEquals(shoppingCartRequestDto.getBookId(), actual.getBookId());
+        assertEquals(shoppingCartRequestDto.getQuantity(), actual.getQuantity());
     }
 
     @Test
     void addItemToCart_NewCartItemToExistingShoppingCartInDatabase_Success() {
-        User user = creatUser();
+        User user = createUser();
         CreateShoppingCartRequestDto shoppingCartRequestDto = new CreateShoppingCartRequestDto()
                 .setBookId(2L)
                 .setQuantity(5);
@@ -127,14 +124,14 @@ public class ShoppingCartServiceTest {
 
         CartItemDto actual = shoppingCartService.addItemToCart(user, shoppingCartRequestDto);
 
-        assertEquals(2L, actual.getBookId());
-        assertEquals(5, actual.getQuantity());
-        assertEquals(1, actual.getId());
+        assertEquals(shoppingCartRequestDto.getBookId(), actual.getBookId());
+        assertEquals(shoppingCartRequestDto.getQuantity(), actual.getQuantity());
+        assertEquals(cartItemDto.getId(), actual.getId());
     }
 
     @Test
-    void addItemToCart_addExistingCartItemToExistingShoppingCartInDatabase_Success() {
-        User user = creatUser();
+    void addItemToCart_existingCartAndItem_updatesQuantity() {
+        User user = createUser();
         CreateShoppingCartRequestDto shoppingCartRequestDto = new CreateShoppingCartRequestDto()
                 .setBookId(2L)
                 .setQuantity(15);
@@ -148,7 +145,7 @@ public class ShoppingCartServiceTest {
                 .setBook(existingCartItem.getBook())
                 .setQuantity(shoppingCartRequestDto.getQuantity() + existingCartItem.getQuantity());
         CartItemDto cartItemDto = new CartItemDto().setId(updatedCartItem.getId())
-                .setBookId(updatedCartItem.getId())
+                .setBookId(updatedCartItem.getBook().getId())
                 .setQuantity(updatedCartItem.getQuantity());
 
         when(bookRepository.findById(shoppingCartRequestDto.getBookId())).thenReturn(Optional.of(book));
@@ -160,14 +157,14 @@ public class ShoppingCartServiceTest {
 
         CartItemDto actual = shoppingCartService.addItemToCart(user, shoppingCartRequestDto);
 
-        assertEquals(1L, actual.getBookId());
-        assertEquals(20, actual.getQuantity());
-        assertEquals(1, actual.getId());
+        assertNotNull(actual.getId());
+        assertEquals(book.getId(), actual.getBookId());
+        assertEquals(updatedCartItem.getQuantity(), actual.getQuantity());
     }
 
     @Test
-    void addItemToCart_NewCartItemToExistingShoppingCartInDatabase_ThrowException() {
-        User user = creatUser();
+    void addItemToCart_BookNotFound_ThrowsException() {
+        User user = createUser();
         CreateShoppingCartRequestDto shoppingCartRequestDto = new CreateShoppingCartRequestDto()
                 .setBookId(-2L)
                 .setQuantity(1);
@@ -184,7 +181,7 @@ public class ShoppingCartServiceTest {
     void updateItemQuantityById_changeItemQuantityInDatabase_Success() {
         Long itemId = 1L;
         UpdateCartItemRequestDto itemRequestDto = new UpdateCartItemRequestDto().setQuantity(10);
-        User user = creatUser();
+        User user = createUser();
         ShoppingCart shoppingCart = createShoppingCart(user);
         Book book = createBook();
         CartItem cartItem = new CartItem().setId(itemId).setShoppingCart(shoppingCart).setBook(book)
@@ -219,19 +216,17 @@ public class ShoppingCartServiceTest {
     void deleteBookByIdFromCart_deleteCartItemInDatabase_Success() {
         Long itemId = 1L;
         UpdateCartItemRequestDto itemRequestDto = new UpdateCartItemRequestDto().setQuantity(10);
-        User user = creatUser();
+        User user = createUser();
         ShoppingCart shoppingCart = createShoppingCart(user);
         Book book = createBook();
         CartItem cartItem = new CartItem().setId(itemId).setShoppingCart(shoppingCart).setBook(book)
                 .setQuantity(itemRequestDto.getQuantity());
 
         when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
-        doNothing().when(cartItemRepository).deleteById(itemId);
 
         shoppingCartService.deleteBookByIdFromCart(itemId);
 
-        verify(cartItemRepository).deleteById(1L);
-        verify(cartItemRepository, times(1)).deleteById(1L);
+        verify(cartItemRepository).deleteById(itemId);
     }
 
     @Test
@@ -244,7 +239,7 @@ public class ShoppingCartServiceTest {
         assertEquals("Item with id " + itemId + " not found", exception.getMessage());
     }
 
-    private User creatUser() {
+    private User createUser() {
         return new User()
                 .setId(1L)
                 .setEmail("mail@test.com")

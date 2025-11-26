@@ -2,6 +2,7 @@ package book.store.service.impl;
 
 import book.store.dto.user.UserRegistrationRequestDto;
 import book.store.dto.user.UserResponseDto;
+import book.store.exception.EntityNotFoundException;
 import book.store.exception.RegistrationException;
 import book.store.mapper.UserMapper;
 import book.store.model.User;
@@ -30,5 +31,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("User with email " + email
+                        + " not found")
+        );
     }
 }

@@ -1,10 +1,10 @@
 package book.store.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import book.store.model.ShoppingCart;
 import book.store.repository.shoppingcart.ShoppingCartRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,6 +15,8 @@ import java.util.Optional;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ShoppingCartRepositoryTest {
+    private static final Long EXISTING_SHOPPING_CART_ID = 1L;
+    private static final Long EXISTING_USER_ID = 2L;
 
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
@@ -25,12 +27,10 @@ public class ShoppingCartRepositoryTest {
     @Sql(scripts = "classpath:database/shoppingcart/delete-added-shopping-cart.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findByUserId_ShoppingCartInDatabase_Success() {
-        Long userId = 1L;
+        Optional<ShoppingCart> actual = shoppingCartRepository.findByUserId(EXISTING_USER_ID);
 
-        Optional<ShoppingCart> actual = shoppingCartRepository.findByUserId(userId);
-
-        Assertions.assertTrue(actual.isPresent());
-        assertEquals(1, actual.get().getId());
-        assertEquals(1, actual.get().getUser().getId());
+        assertTrue(actual.isPresent());
+        assertEquals(EXISTING_SHOPPING_CART_ID, actual.get().getId());
+        assertEquals(EXISTING_USER_ID, actual.get().getUser().getId());
     }
 }

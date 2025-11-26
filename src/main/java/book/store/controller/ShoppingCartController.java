@@ -6,6 +6,7 @@ import book.store.dto.shoppingcart.ShoppingCartDto;
 import book.store.dto.shoppingcart.UpdateCartItemRequestDto;
 import book.store.model.User;
 import book.store.service.ShoppingCartService;
+import book.store.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,13 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
+    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "View shopping cart", description = "User can view his shopping cart")
     @PreAuthorize("hasRole('USER')")
-    public ShoppingCartDto getShoppingCart() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+    public ShoppingCartDto getShoppingCart(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
         return shoppingCartService.getShoppingCart(user.getId());
     }
 
@@ -45,9 +46,10 @@ public class ShoppingCartController {
     @Operation(summary = "Add item", description = "User can add item to his shopping cart")
     @PreAuthorize("hasRole('USER')")
     public CartItemDto addItemToShoppingCart(
-            @RequestBody @Valid CreateShoppingCartRequestDto shoppingCartRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+            @RequestBody @Valid CreateShoppingCartRequestDto shoppingCartRequestDto,
+            Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
         return shoppingCartService.addItemToCart(user, shoppingCartRequestDto);
     }
 
