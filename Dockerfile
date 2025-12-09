@@ -1,12 +1,12 @@
 # Builder stage
-FROM openjdk:21-jdk-slim AS builder
+FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 # Final stage
-FROM openjdk:21-jdk-slim
+FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
 COPY --from=builder app/dependencies/ ./
 COPY --from=builder app/spring-boot-loader/ ./
