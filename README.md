@@ -162,6 +162,6 @@ You need to grant privileges to users manually. You can execute the following SQ
 
 ---
 
-## 🗄️ Project presentation
+## 🎥 Project presentation
 
 https://github.com/user-attachments/assets/1fd5226f-8ae1-448d-ad50-c767e22c32ad
